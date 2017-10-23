@@ -1,0 +1,99 @@
+<html>
+
+<head>
+    <link rel="stylesheet" type="text/css" href="css/ionic.css">
+    <script type="text/javascript" src="js/jquery.js"></script>
+    <script type="text/javascript" src="js/geturi.js"></script>
+    <script type="text/javascript">
+    $(document).ready(function() {
+        var id = decodeURI(getUrlVars()["id"]);
+        var title = decodeURI(getUrlVars()["title"]);
+        var duration = decodeURI(getUrlVars()["duration"]);
+        var price = decodeURI(getUrlVars()["price"]);
+        $("#id").val(id);
+        $("#title").val(title);
+        $("#duration").val(duration);
+        $("#price").val(price);
+        $("#update").click(function() {
+            var id = $("#id").val();
+            var title = $("#title").val();
+            var duration = $("#duration").val();
+            var price = $("#price").val();
+            var dataString = "id=" + id + "&title=" + title + "&duration=" + duration + "&price=" + price + "&update=";
+            $.ajax({
+                type: "POST",
+                url: "http://localhost/phonegap-app/php/update.php",
+                data: dataString,
+                crossDomain: true,
+                cache: false,
+                beforeSend: function() {
+                    $("#update").val('Connecting...');
+                },
+                success: function(data) {
+                    if (data == "success") {
+                        alert("Updated");
+                        $("#update").val("Update");
+                    } else if (data == "error") {
+                        alert("error");
+                    }
+                }
+            });
+
+        });
+        $("#delete").click(function() {
+            var id = $("#id").val();
+            var dataString = "id=" + id + "&delete=";
+            $.ajax({
+                type: "GET",
+                url: "http://localhost/phonegap-app/php/delete.php",
+                data: dataString,
+                crossDomain: true,
+                cache: false,
+                beforeSend: function() {
+                    $("#delete").val('Connecting...');
+                },
+                success: function(data) {
+                    if (data == "success") {
+                        alert("Deleted");
+                        $("#delete").val("Delete");
+                    } else if (data == "error") {
+                        alert("error");
+                    }
+                }
+            });
+
+        });
+    });
+    </script>
+</head>
+
+<body>
+    <div class="bar bar-header bar-positive" style="margin-bottom:80px;background-color: blue">
+        <a href="index.html" class="button button-clear">Home</a>
+        <h1 class="title">Update Database</h1>
+        <a class="button button-clear" href="readjson.html">Read Data</a>
+    </div>
+    <br/>
+    <br/>
+    <div class="list">
+        <input type="hidden" id="id" value="" />
+        <div class="item">
+            <label>Employee Name</label>
+            <input type="text" id="title" value="" />
+        </div>
+        <div class="item">
+            <label>Employee Position</label>
+            <input type="text" id="duration" value="" />
+        </div>
+        <div class="item">
+            <label>Employee Salary</label>
+            <input type="text" id="price" value="" />
+        </div>
+        <div class="item">
+            <input type="button" id="update" class="button button-block" value="Update" />
+            <input type="button" id="delete" class="button button-block" value="Delete" />
+        </div>
+    </div>
+</body>
+
+</html>
